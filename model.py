@@ -15,30 +15,45 @@ def preveri_ce_je_veljavna_st_izdelka(st):
 class Izdelki:
 
     def __init__(self):
-        self.baza_izdelkov = ()
+        self.baza_izdelkov = {}
+
+
+    def dodaj_izdelek(self, izdelek):
+        self.baza_izdelkov[izdelek.st_izdelka] = izdelek
+
+    def uredi_lastnosti_izdelka(self, izdelek):
+        self.baza_izdelkov[izdelek.st_izdelka] = izdelek
 
 
 class Izdelek:
 
-    def __init__(self, st_izdelka, ime=None, cena=None, kategorija=None, ponudba=None, opis=None):
+    def __init__(self, st_izdelka):
         self.st_izdelka = st_izdelka
+
+    def lastnosti(self, ime=None, cena=None, kategorija=None, ponudba=None, opis=None):
         self.ime = ime
         self.cena = cena
         self.kategorija = kategorija
         self.ponudba = ponudba
         self.opis = opis
+        self.slovar = {"ime": ime, "cena": cena, "kategorija": kategorija, "ponudba" : ponudba, "opis": opis}
 
-    def uredi_izdelek(self, st_izdelka, cena=None, kategorija=None, ponudba=None):
-        #preverjanje če je izdelek že v bazi izdelkov
-        if f"{st_izdelka}" in self.baza_izdelkov:
-            if self.baza_izdelkov[f"{st_izdelka}"]["cena"] == None and not cena == None:
-                 self.baza_izdelkov[f"{st_izdelka}"]["cena"] = cena
-            if self.baza_izdelkov[f"{st_izdelka}"]["kategorija"] == None and not kategorija == None:
-                self.baza_izdelkov[f"{st_izdelka}"]["kategorija"] = kategorija
-            if self.baza_izdelkov[f"{st_izdelka}"]["ponudba"] == None and not ponudba == None:
-                self.baza_izdelkov[f"{st_izdelka}"]["ponudba"] = ponudba
-            else:
-                pass
+    def posodobi_lastnosti(self, ime=None, cena=None, kategorija=None, ponudba=None, opis=None):
+        if not self.ime and ime:
+            self.ime = ime
+            self.slovar["ime"] = ime
+        if not self.cena and cena:
+            self.cena = cena
+            self.slovar["cena"] = cena
+        if not self.kategorija and kategorija:
+            self.kategorija = kategorija
+            self.slovar["kategorija"] = kategorija
+        if not self.ponudba and ponudba:
+            self.ponudba = ponudba
+            self.slovar["ponudba"] = ponudba
+        if not self.opis and opis:
+            self.opis = opis
+            self.slovar["opis"] = opis
         
        
 
@@ -64,7 +79,15 @@ class Izdelek:
 class Ocene:
     def __init__(self):
         self.ocene = {}
-        self.izracunane_ocene = {}
+
+    def dodaj_oceno(self, ocena):
+        self.ocene[ocena.st]=ocena
+
+class Ocena:
+    def __init__(self,st_izdelka):
+        self.ocene = {}
+        self.izracunana = {}
+        self.st_izdelka = st_izdelka
 
     def prost_id_ocene(self):
         if self.ocene:
@@ -72,25 +95,22 @@ class Ocene:
         else:
              return 1
 
-    def poisci_id(self, st_izdelka=None):
-        rezultat = []
-        for id_ocene in self.ocene:
-            ocena = self.ocene[id_ocene]
-            if (st_izdelka == ocena["st_izdelka"] or st_izdelka is None):
-                rezultat.append(id_ocene)
-        return rezultat
-    
-    def izracun_ocene(self, st_izdelka):
-        ocene_za_izracun = self.poisci_id(st_izdelka)
+
+    def izracun_ocene(self):
         sum = 0
-        for id_ocene in ocene_za_izracun:
+        for id_ocene in self.ocene:
             sum += self.ocene[id_ocene]["ocena"]
-        self.izracunane_ocene[st_izdelka] = sum
+        self.izracunane_ocene[datetime.datetime] = sum
         return sum
 
     
-    def nova_ocena(self, st_izdelka, ocena):
-        ocena = {"st_izdelka": st_izdelka, "ocena":ocena}
+    def nova_ocena(self, ocena, st_racuna):
+        for key in self.ocene:
+            if self.ocene["st_racuna"] == st_racuna:
+                pass
+            else:
+                continue
+        ocena = {"ocena": ocena, "datetime": datetime.datetime, "st_racuna": st_racuna}
         id_ocene = self.prost_id_ocene()
         self.ocene[id_ocene] = ocena
 
