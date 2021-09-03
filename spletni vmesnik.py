@@ -2,6 +2,7 @@ import bottle
 
 import model
 izdelki = model.Izdelki()
+ocene = model.Ocene
 
 
 bottle.TEMPLATE_PATH.insert(0, 'C:\\Users\\Jamnik\\Documents\\FMF\\UVP drugič\\projektna naloga\\views')
@@ -67,7 +68,10 @@ def prikazi(st_izdelka):
         izdelek = izdelki.baza_izdelkov[st_izdelka]
         return bottle.template("prikazi_izdelek.tpl", izdelek=izdelek)
 
-
+@bottle.get("/oceni/<st_izdelka>")
+def oceni(st_izdelka):
+    ocena = model.Ocena(st_izdelka)
+    ocene.dodaj_oceno
 
 bottle.run(debug=True, reloader=True)
  
