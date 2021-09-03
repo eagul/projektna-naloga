@@ -81,64 +81,60 @@ class Ocene:
         self.ocene = {}
 
     def dodaj_oceno(self, ocena):
-        self.ocene[ocena.st]=ocena
+        self.ocene[ocena.st_izdelka]=ocena
 
 class Ocena:
     def __init__(self,st_izdelka):
-        self.ocene = {}
-        self.izracunana = {}
+        self.ocene_izdelka = {}
+        self.izracunana = 0
         self.st_izdelka = st_izdelka
 
     def prost_id_ocene(self):
-        if self.ocene:
-            return max(self.ocene) + 1
+        if self.ocene_izdelka:
+            return max(self.ocene_izdelka) + 1
         else:
              return 1
 
 
     def izracun_ocene(self):
         sum = 0
-        for id_ocene in self.ocene:
-            sum += self.ocene[id_ocene]["ocena"]
-        self.izracunane_ocene[datetime.datetime] = sum
-        return sum
+        count = 0
+        for id_ocene in self.ocene_izdelka:
+            count += 1
+            sum += self.ocene_izdelka[id_ocene]["ocena"]
+        self.izracunana = sum // count
+        return sum // count
 
     
     def nova_ocena(self, ocena, st_racuna):
-        for key in self.ocene:
-            if self.ocene["st_racuna"] == st_racuna:
-                pass
-            else:
-                continue
-        ocena = {"ocena": ocena, "datetime": datetime.datetime, "st_racuna": st_racuna}
-        id_ocene = self.prost_id_ocene()
-        self.ocene[id_ocene] = ocena
+        if Racuni.nov_racun_check(st_racuna):
+            ocena = {"ocena": ocena, "datetime": datetime.datetime, "st_racuna": st_racuna}
+            id_ocene = self.prost_id_ocene()
+            self.ocene_izdelka[id_ocene] = ocena
+        else:
+            "št računa ni veljavna"
 
     def zapisi_ocene_v_datoteko(self, ime_dat): #ime datoteke naj bo string in naj se začne z "projektna naloga\\"
         with open(ime_dat, "w", encoding="utf-8") as dat:
-            slovar = self.ocene
+            slovar = self.ocene_izdelka
             json.dump(slovar, dat)
 
 class Racuni:
         def __init__(self):
-            self.baza_racunov = {}
+            self.baza_racunov = set()
 
 
-        def nov_racun(self, st_racuna):
+        def nov_racun_check(self, st_racuna):
             #check_veljavnost dolzine
             if len(st_racuna) <  14 or len(st_racuna) > 34:
                 return False
-
-            razrez = st_racuna.split("-").split()
-            nov_niz = ""
-            for elemnt in razrez:
-                nov_niz += elemnt
-            st_racuna = nov_niz
             # check veljavnosti prodajnega mesta
             if st_racuna[:6] not in baza_prodajnih_mest:
                 return False
-            self.baza_racunov[st_racuna] = f"{datetime.time() ,datetime.date()}"
-        
+            if not st_racuna in self.baza_racunov:
+                self.baza_racunov.add(st_racuna)
+                return True
+
         def zapisi_racune_v_datoteko(self, ime_dat): #ime datoteke naj bo string in naj se začne z "projektna naloga\\"
             with open(ime_dat, "w", encoding="utf-8") as dat:
                 slovar = self.baza_racunov
