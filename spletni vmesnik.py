@@ -21,7 +21,8 @@ def posreduj():
     iskalni_niz = bottle.request.query['iskalni_niz']
 
     if not model.preveri_ce_je_veljavna_st_izdelka(iskalni_niz):
-        return "Številka izdelka ni veljavna"
+        
+        return bottle.template("st_izdelka_narobe.tpl")
     else:
         try :
             izdelki.baza_izdelkov[iskalni_niz]
@@ -90,11 +91,11 @@ def ocena(st_izdelka):
     if ocena.nov_racun_check(st_racuna):
         rez_ocena = UTEZI[rez]
         ocena.nova_ocena(rez_ocena, st_racuna)
-        ocena.izracun_ocene
-
+        ocena.izracun_ocene()
+        
         return bottle.redirect(f'/izdelek/{st_izdelka}')
     else:
-        return bottle.template("st_racuna_narobe.tpl")
+        return bottle.template("st_racuna_narobe.tpl", naslov=st_izdelka)
     
 bottle.run(debug=True, reloader=True)
  

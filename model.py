@@ -119,12 +119,10 @@ class Ocena:
 
     
     def nova_ocena(self, ocena, st_racuna):
-        if self.nov_racun_check(st_racuna):
-            ocena = {"ocena": ocena, "datetime": datetime.datetime, "st_racuna": st_racuna}
-            id_ocene = self.prost_id_ocene()
-            self.ocene_izdelka[id_ocene] = ocena
-        else:
-            "št računa ni veljavna"
+        ocena = {"ocena": ocena, "datetime": datetime.datetime, "st_racuna": st_racuna}
+        id_ocene = self.prost_id_ocene()
+        self.ocene_izdelka[id_ocene] = ocena
+       
 
     def zapisi_ocene_v_datoteko(self, ime_dat): #ime datoteke naj bo string in naj se začne z "projektna naloga\\"
         with open(ime_dat, "w", encoding="utf-8") as dat:
