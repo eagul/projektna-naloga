@@ -13,16 +13,19 @@
 % n = 0
 % slovar = izdelek.slovar
 % for key in slovar:
-% n += 1
-% if not n == len(slovar):
+% 
+% if not slovar[key]:
     <form action="/uredi/{{izdelek.st_izdelka}}">
-    <button type="submit">Uredi informacije o izdelku</button>
+    <button type="submit">Dodaj {{key}} izdelka</button>
     </form>
-%
-%
-%
-%
-%
+%end
+%end
+%end
+%end
+%end
+
+Ta izdelek je ocenejen kot: {{ocena.izracunana}}
+
 
 <form action="/oceni/{{izdelek.st_izdelka}}">
 <button type="submit">Oceni ta izdelek</button>

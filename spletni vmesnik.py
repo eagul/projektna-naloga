@@ -1,9 +1,14 @@
+import re
 import bottle
 
 import model
 izdelki = model.Izdelki()
-ocene = model.Ocene
+ocene = model.Ocene()
 
+UTEZI = {"YGWYPF":1.0, "POP":1.0,"SCAM":1.0}
+KATEGORIJE = {"A":22.5 , "B" : 9.5 , "C" : 100}
+PONUDBA = ("Stalna", "Občasna")
+baza_prodajnih_mest = ("381029")
 
 bottle.TEMPLATE_PATH.insert(0, 'C:\\Users\\Jamnik\\Documents\\FMF\\UVP drugič\\projektna naloga\\views')
 
@@ -38,6 +43,9 @@ def dodaj_izdelek():
     u = model.Izdelek(st_izdelka)
     u.lastnosti(ime, cena, kategorija, ponudba, opis)
     izdelki.dodaj_izdelek(u)
+    i = model.Ocena(st_izdelka)
+    ocene.dodaj_oceno(i)
+    
     return bottle.redirect(f'/izdelek/{st_izdelka}')
 
 
@@ -58,20 +66,35 @@ def uredi_izdelek():
     ponudba = bottle.request.forms['ponudba']
     izdelek = izdelki.baza_izdelkov[st_izdelka]
     izdelek.posodobi_lastnosti(ime, cena, kategorija, ponudba, opis)
-    #print(izdelek.slovar["cena"])
-    #izdelki.baza_izdelkov[st_izdelka] = izdelek
     return bottle.redirect(f'/izdelek/{st_izdelka}')
 
 
 @bottle.get("/izdelek/<st_izdelka>")
 def prikazi(st_izdelka):
         izdelek = izdelki.baza_izdelkov[st_izdelka]
-        return bottle.template("prikazi_izdelek.tpl", izdelek=izdelek)
+        ocena = ocene.baza_ocen[st_izdelka]
+
+        return bottle.template("prikazi_izdelek.tpl", izdelek=izdelek, ocena=ocena)
 
 @bottle.get("/oceni/<st_izdelka>")
 def oceni(st_izdelka):
-    ocena = model.Ocena(st_izdelka)
-    ocene.dodaj_oceno
+    ocena = ocene.baza_ocen[st_izdelka]
 
+    return bottle.template("oceni_izdelek.tpl", ocena=ocena)
+
+@bottle.post("/oceni/<st_izdelka>")
+def ocena(st_izdelka):
+    st_racuna = bottle.request.forms["st_racuna"]
+    rez = bottle.request.forms["ocena"]
+    ocena = ocene.baza_ocen[st_izdelka]
+    if ocena.nov_racun_check(st_racuna):
+        rez_ocena = UTEZI[rez]
+        ocena.nova_ocena(rez_ocena, st_racuna)
+        ocena.izracun_ocene
+
+        return bottle.redirect(f'/izdelek/{st_izdelka}')
+    else:
+        return bottle.template("st_racuna_narobe.tpl")
+    
 bottle.run(debug=True, reloader=True)
  
