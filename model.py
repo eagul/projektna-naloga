@@ -1,6 +1,7 @@
 
 import json
-import datetime
+
+
 UTEZI = {"YGWYPF":1.0, "POP":1.0,"SCAM":1.0}
 KATEGORIJE = {"A":22.5 , "B" : 9.5 , "C" : 100}
 PONUDBA = ("Stalna", "Občasna")
@@ -23,6 +24,36 @@ class Izdelki:
 
     def uredi_lastnosti_izdelka(self, izdelek):
         self.baza_izdelkov[izdelek.st_izdelka] = izdelek
+
+    
+    def v_dat(self, ime_dat): #ime datoteke naj bo string in naj se začne z "projektna naloga\\"
+        with open(ime_dat, "w", encoding="utf-8") as dat:
+            slovar = {}
+            for st_izdelka in self.baza_izdelkov:
+                izdelek = self.baza_izdelkov[st_izdelka]
+                slovar_lastnosti = izdelek.slovar
+                slovar[st_izdelka] = slovar_lastnosti
+            json.dump(slovar, dat)
+
+
+    
+
+    def iz_dat(self, ime_datoteke):
+        with open(ime_datoteke) as dat:
+            slovar = json.load(dat)
+            
+            for st_izdelka in slovar:
+                izdelek = Izdelek(st_izdelka)
+                ime = slovar[st_izdelka]["ime"]
+                cena = slovar[st_izdelka]["cena"]
+                kategorija = slovar[st_izdelka]["kategorija"]
+                ponudba = slovar[st_izdelka]["ponudba"]
+                opis = slovar[st_izdelka]["opis"]
+                izdelek.lastnosti(ime, cena, kategorija, ponudba, opis)
+                self.dodaj_izdelek(izdelek)
+
+            
+
 
 
 class Izdelek:
@@ -57,22 +88,7 @@ class Izdelek:
         
        
 
-    def zapisi_izdelke_v_datoteko(self, ime_dat): #ime datoteke naj bo string in naj se začne z "projektna naloga\\"
-        with open(ime_dat, "w", encoding="utf-8") as dat:
-            slovar = self.baza_izdelkov
-            json.dump(slovar, dat)
-
-    def iz_slovarja(slovar):
-        u = Izdelki()
-        for key in slovar:
-            u.nov_izdelek(key, key["cena"], key["kategorija"], key["ponudba"])
-
-
-    def preberi_iz_datoteke(ime_datoteke):
-        with open(ime_datoteke) as dat:
-            slovar = json.load(dat)
-            return Izdelki.iz_slovarja(slovar)
-
+   
 
 
 
@@ -82,6 +98,28 @@ class Ocene:
 
     def dodaj_oceno(self, ocena):
         self.baza_ocen[ocena.st_izdelka]=ocena
+
+    
+    def v_dat(self, ime_dat): #ime datoteke naj bo string in naj se začne z "projektna naloga\\"
+        with open(ime_dat, "w", encoding="utf-8") as dat:
+            slovar = {}
+            for element in self.baza_ocen:
+                ocene = self.baza_ocen[element]
+                vse_ocene = ocene.ocene_izdelka
+                slovar[element] = vse_ocene
+            json.dump(slovar, dat)
+
+    def iz_dat(self, ime_dat):
+        with open(ime_dat) as dat:
+            slovar = json.load(dat)
+            for key in slovar:
+                oc_izdelka = Ocena(key)
+               
+                for id in slovar[key]:
+                    ocena = slovar[key][id]["st_racuna"]
+                    st_racuna = slovar[key][id]["st_racuna"]
+                    oc_izdelka.nova_ocena(ocena, st_racuna)
+                self.dodaj_oceno(oc_izdelka)
 
 class Ocena:
     def __init__(self,st_izdelka):
@@ -119,13 +157,8 @@ class Ocena:
 
     
     def nova_ocena(self, ocena, st_racuna):
-        ocena = {"ocena": ocena, "datetime": datetime.datetime, "st_racuna": st_racuna}
+        ocena = {"ocena": ocena, "st_racuna": st_racuna}
         id_ocene = self.prost_id_ocene()
         self.ocene_izdelka[id_ocene] = ocena
        
-
-    def zapisi_ocene_v_datoteko(self, ime_dat): #ime datoteke naj bo string in naj se začne z "projektna naloga\\"
-        with open(ime_dat, "w", encoding="utf-8") as dat:
-            slovar = self.ocene_izdelka
-            json.dump(slovar, dat)
 
