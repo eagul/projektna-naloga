@@ -6,7 +6,7 @@ Vnesite informacije o izdelku
 <form action="/dodaj_izdelek/" method="POST">
 
 
-<input type="text" pattern="[0-9]*" name="st_izdelka" value="{{st_izdelka}}">>
+<input type="text" pattern="[0-9]*" name="st_izdelka" value="{{st_izdelka}}">
     <br>
     ime : <input type="text" name="ime">
     <br>

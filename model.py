@@ -104,8 +104,8 @@ class Ocene:
         with open(ime_dat, "w", encoding="utf-8") as dat:
             slovar = {}
             for element in self.baza_ocen:
-                ocene = self.baza_ocen[element]
-                vse_ocene = ocene.ocene_izdelka
+                ocena = self.baza_ocen[element]
+                vse_ocene = ocena.ocene_izdelka
                 slovar[element] = vse_ocene
             json.dump(slovar, dat)
 
@@ -116,7 +116,7 @@ class Ocene:
                 oc_izdelka = Ocena(key)
                
                 for id in slovar[key]:
-                    ocena = slovar[key][id]["st_racuna"]
+                    ocena = slovar[key][id]["ocena"]
                     st_racuna = slovar[key][id]["st_racuna"]
                     oc_izdelka.nova_ocena(ocena, st_racuna)
                 self.dodaj_oceno(oc_izdelka)
