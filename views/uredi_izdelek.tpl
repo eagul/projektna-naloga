@@ -11,10 +11,20 @@ Vnesite informacije o izdelku
     ime : <input type="text" name="ime" value="{{izdelek.ime}}">
     <br>
     cena: <input type="text" pattern="[0-9]*" name="cena" value="{{izdelek.cena}}">
+    <br><br>
+    <input type="radio" id="A" name="kategorija" value="A" required >
+  <label for="A">A</label><br>
+  <input type="radio" id="B" name="kategorija" value="B">
+  <label for="B">B</label><br>
+  <input type="radio" id="C" name="kategorija" value="C">
+  <label for="C">C</label>
     <br>
-    kategorija :<input type="text" name="kategorija" value="{{izdelek.kategorija}}">
     <br>
-    ponudba: <input type="text" name="ponudba" value="{{izdelek.ponudba}}">
+    <input type="radio" id="Stalna" name="ponudba" value="Stalna" required >
+  <label for="Stalna">Stalna ponudba</label><br>
+  <input type="radio" id="Začasna" name="ponudba" value="Začasna">
+  <label for="Začasna">Začasna ponudba</label><br>
+ 
     <br>
     opis: <input type="text" name="opis" value="{{izdelek.opis}}">
     <br>

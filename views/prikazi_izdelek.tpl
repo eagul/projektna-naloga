@@ -16,7 +16,7 @@
 % 
 % if not slovar[key]:
     <form action="/uredi/{{izdelek.st_izdelka}}">
-    <button type="submit">Dodaj {{key}} izdelka</button>
+    <button type="submit">Dodaj {{key}} o izdelku</button>
     </form>
 %end
 %end

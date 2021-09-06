@@ -4,8 +4,11 @@ import bottle
 import model
 izdelki = model.Izdelki()
 ocene = model.Ocene()
-
-UTEZI = {"YGWYPF":1.0, "POP":1.0,"SCAM":1.0}
+DESTINACIJA_IZDELKI = "projektna naloga\\izdelki"
+DESTINACIJA_OCENE = "projektna naloga\\ocene"
+izdelki.iz_dat(DESTINACIJA_IZDELKI)
+ocene.iz_dat(DESTINACIJA_OCENE)
+UTEZI = {"YGWYPF":1.0, "POP":0.0, "SCAM":-1.0}
 KATEGORIJE = {"A":22.5 , "B" : 9.5 , "C" : 100}
 PONUDBA = ("Stalna", "Občasna")
 baza_prodajnih_mest = ("381029")
@@ -67,6 +70,7 @@ def uredi_izdelek():
     ponudba = bottle.request.forms['ponudba']
     izdelek = izdelki.baza_izdelkov[st_izdelka]
     izdelek.posodobi_lastnosti(ime, cena, kategorija, ponudba, opis)
+   
     return bottle.redirect(f'/izdelek/{st_izdelka}')
 
 
@@ -74,7 +78,8 @@ def uredi_izdelek():
 def prikazi(st_izdelka):
         izdelek = izdelki.baza_izdelkov[st_izdelka]
         ocena = ocene.baza_ocen[st_izdelka]
-
+        izdelki.v_dat(DESTINACIJA_IZDELKI)
+        ocene.v_dat(DESTINACIJA_OCENE)
         return bottle.template("prikazi_izdelek.tpl", izdelek=izdelek, ocena=ocena)
 
 @bottle.get("/oceni/<st_izdelka>")
